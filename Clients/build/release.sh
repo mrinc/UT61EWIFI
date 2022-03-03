@@ -36,12 +36,21 @@ DAV="$(node $VERF)";
 npx electron-forge make;
 ls -la ./out
 ls -la ./out/make
-cp ../../License/* ./out/make/deb/x64/;
-echo "$DAV" > ./out/make/deb/x64/version.txt;
-tar -czvf "$RELD/SimpleWeb-Desktop-deb-x64-$DAV.tar.gz" ./out/make/deb/x64/*.*;
-cp ../../License/* ./out/make/rpm/x64/;
-echo "$DAV" > ./out/make/rpm/x64/version.txt;
-tar -czvf "$RELD/SimpleWeb-Desktop-rpm-x64-$DAV.tar.gz" ./out/make/rpm/x64/*.*;
+if [ -d "./out/make/deb/"]
+then
+  cp ../../License/* ./out/make/deb/x64/;
+  echo "$DAV" > ./out/make/deb/x64/version.txt;
+  tar -czvf "$RELD/SimpleWeb-Desktop-deb-x64-$DAV.tar.gz" ./out/make/deb/x64/*.*;
+  cp ../../License/* ./out/make/rpm/x64/;
+  echo "$DAV" > ./out/make/rpm/x64/version.txt;
+  tar -czvf "$RELD/SimpleWeb-Desktop-rpm-x64-$DAV.tar.gz" ./out/make/rpm/x64/*.*;
+fi
+if [ -d "./out/make/darwin/"]
+then
+  cp ../../License/* ./out/make/darwin/x64/;
+  echo "$DAV" > ./out/make/darwin/x64/version.txt;
+  tar -czvf "$RELD/SimpleWeb-Desktop-darwin-x64-$DAV.tar.gz" ./out/make/darwin/x64/*.*;
+fi
 
 cd $CWD;
 cd ./Clients/build;

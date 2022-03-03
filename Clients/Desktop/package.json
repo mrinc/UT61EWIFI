@@ -30,12 +30,6 @@
       },
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "desktop"
-          }
-        },
-        {
           "name": "@electron-forge/maker-zip",
           "platforms": [
             "darwin",
