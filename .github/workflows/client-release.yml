@@ -9,12 +9,14 @@ on:
 
 jobs:
   build-and-release:
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         node-version: [16.x]
+
+    name: Build & Release on ${{ matrix.os }}.
+    runs-on: ${{ matrix.os }}
+
 
     outputs:
       RELVERSION: ${{ steps.build-and-release.outputs.RELVERSION }}
