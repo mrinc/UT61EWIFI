@@ -34,6 +34,8 @@ echo "Release desktop app";
 cd ./Clients/Desktop;
 DAV="$(node $VERF)";
 npx electron-forge make;
+ls -la ./out
+ls -la ./out/make
 cp ../../License/* ./out/make/deb/x64/;
 echo "$DAV" > ./out/make/deb/x64/version.txt;
 tar -czvf "$RELD/SimpleWeb-Desktop-deb-x64-$DAV.tar.gz" ./out/make/deb/x64/*.*;
