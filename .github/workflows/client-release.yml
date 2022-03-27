@@ -162,10 +162,14 @@ jobs:
           cd ./Clients/Desktop;
           npm version "${{ needs.version.outputs.RELVERSION }}";
 
+      - name: Pre-Build
+        run: |
+          cd ./Clients/Desktop;
+          node prebuild.js;
+
       - name: Build
         run: |
           cd ./Clients/Desktop;
-          node build.js;
           bash ../build/ci-desktop-build.sh "${{ needs.version.outputs.RELVERSION }}";
 
       - name: Archive production artifacts
