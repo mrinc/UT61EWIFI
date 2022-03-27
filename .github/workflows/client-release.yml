@@ -37,19 +37,17 @@ jobs:
 
       - name: Version
         run: |
-          cd ./Clients/SimpleWeb;
-          echo $(pwd);
-          cat ./package.json;
+          cd ./Clients/SimpleWeb/web;
           npm version "${{ needs.version.outputs.RELVERSION }}";
 
       - name: Build
         run: |
-          cd ./Clients/SimpleWeb;
+          cd ./Clients/SimpleWeb/web;
           npm run build;
 
       - name: Release
         run: |
-          cd ./Clients/SimpleWeb/dist;
+          cd ./Clients/SimpleWeb/web/dist;
           echo -n "${{ needs.version.outputs.RELVERSION }}" >> ./VERSION.txt;
           cp ../../../License/* ./;
           mkdir ../../../releases;
@@ -60,7 +58,7 @@ jobs:
         with:
           name: web-source
           path: |
-            ./Clients/SimpleWeb/dist/**/*.*
+            ./Clients/SimpleWeb/web/dist/**/*.*
           retention-days: 1
         
       - name: Archive production artifacts
