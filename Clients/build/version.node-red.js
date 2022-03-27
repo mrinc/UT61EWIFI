@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const cwd = process.cwd();
 const htmlKey = "1fda56b.0057529";
-const nodeRedJsonFile = path.join(cwd, "./ut61e.json");
+const nodeRedJsonFile = path.join(cwd, "./ut61e-nodered-web-ui.json");
 
 let nodeRedCode = JSON.parse(fs.readFileSync(nodeRedJsonFile, "utf8").toString());
 
