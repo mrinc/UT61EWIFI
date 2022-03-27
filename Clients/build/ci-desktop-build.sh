@@ -9,8 +9,11 @@ if [[ ! -d "./out/make" ]]; then
   echo "Output make not generated"
   exit 1
 fi
-ls ./out/make
-mkdir ./out/release
+echo "Avail makes:";
+ls ./out/make;
+
+echo "Ready release dir";
+mkdir ./out/release;
 if [[ -d "./out/make/deb/" ]]; then
   echo "Output make release deb"
   cp ../../License/* ./out/make/deb/x64/
