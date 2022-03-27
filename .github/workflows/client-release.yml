@@ -36,19 +36,16 @@ jobs:
           node-version: 16.x
 
       - name: Version
-        id: version
         run: |
           cd ./Clients/SimpleWeb;
           npm version "${{ needs.version.outputs.RELVERSION }}";
 
       - name: Build
-        id: version
         run: |
           cd ./Clients/SimpleWeb;
           npm run build;
 
       - name: Release
-        id: version
         run: |
           cd ./Clients/SimpleWeb/dist;
           echo -n "${{ needs.version.outputs.RELVERSION }}" >> ./VERSION.txt;
