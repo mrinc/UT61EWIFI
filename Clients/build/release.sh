@@ -11,7 +11,7 @@ cd $CWD
 echo "Versioning simple web"
 cd ./Clients/SimpleWeb/web
 SWV="$(node $VERF)"
-echo "Release simple web"
+echo "Release simple web $SWV"
 cd ./dist
 echo "$SWV" >./version.txt
 cp ../../../../License/* ./
@@ -22,23 +22,24 @@ cd $CWD
 echo "Versioning node red"
 cd ./Clients/Node-RED/dist
 NRV="$(node $VERFNR)"
-echo "Release node red"
+echo "Release node red $NRV"
 echo "$NRV" >./version.txt
 cp ../../../License/* ./
 tar -czvf "$RELD/SimpleWeb-NodeRED-$NRV.tar.gz" ./*.*
 
 cd $CWD
 
-echo "Release desktop app"
+echo "Version desktop app"
 cd ./Clients/Desktop
 DAV="$(node $VERF)"
+echo "Release desktop app $DAV"
 npx electron-forge make
-if [![ -d "./out" ]]; then
+if ![[ -d "./out" ]]; then
   echo "Output not generated";
   exit 1
 fi
 ls ./out
-if [![ -d "./out/make" ]]; then
+if ![[ -d "./out/make" ]]; then
   echo "Output make not generated";
   exit 1
 fi
