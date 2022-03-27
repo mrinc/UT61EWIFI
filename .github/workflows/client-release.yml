@@ -8,7 +8,7 @@ on:
       - "feature/CIDevelopmentForMultiPlatformBuilds"
 
 jobs:
-  build-and-release:
+  build-for-release:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -40,7 +40,25 @@ jobs:
         run: bash ./Clients/build/release.sh
 
       - run: echo ${{ steps.build-and-release.outputs.RELVERSION }}
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: releases
+          path: |
+            Clients/build/release/*.tar.gz
+          retention-days: 1
       
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build-for-release
+    steps:
+      - name: Download release builds
+        uses: actions/download-artifact@v3
+        with:
+          name: releases
+
       - name: Post GitHub Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
