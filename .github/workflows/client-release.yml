@@ -39,7 +39,7 @@ jobs:
         id: version
         run: |
           cd ./Clients/SimpleWeb;
-          node version ${{ needs.version.outputs.RELVERSION }};
+          npm version "${{ needs.version.outputs.RELVERSION }}";
           npm run build;
           cd ./dist;
           echo -n "${{ needs.version.outputs.RELVERSION }}" >> ./VERSION.txt;
@@ -139,7 +139,7 @@ jobs:
         id: build-and-release
         run: |
           cd ./Clients/Desktop;
-          node version ${{ needs.version.outputs.RELVERSION }};
+          npm version "${{ needs.version.outputs.RELVERSION }}";
           node build.js;
           bash ../build/ci-desktop-build.sh "${{ needs.version.outputs.RELVERSION }}";
 
