@@ -38,6 +38,8 @@ jobs:
       - name: Version
         run: |
           cd ./Clients/SimpleWeb;
+          echo $(pwd);
+          cat ./package.json;
           npm version "${{ needs.version.outputs.RELVERSION }}";
 
       - name: Build
