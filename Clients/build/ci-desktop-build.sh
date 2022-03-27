@@ -32,6 +32,12 @@ if [[ -d "./out/make/darwin/" ]]; then
   echo "$1" >./out/make/darwin/x64/version.txt
   tar -czvf "$RELD/SimpleWeb-Desktop-darwin-x64-$1.tar.gz" ./out/make/darwin/x64/*.*
 fi
+if [[ -d "./out/make/zip/" ]]; then
+  echo "Output make release darwin"
+  cp ../../License/* ./out/make/zip/x64/
+  echo "$1" >./out/make/zip/x64/version.txt
+  tar -czvf "$RELD/SimpleWeb-Desktop-darwin-x64-$1.tar.gz" ./out/make/zip/x64/*.*
+fi
 if [[ -d "./out/make/squirrel.windows/" ]]; then
   echo "Output make release windows"
   cp ../../License/* ./out/make/squirrel.windows/x64/
