@@ -35,6 +35,11 @@ jobs:
         with:
           node-version: 16.x
 
+      - name: Deps
+        run: |
+          cd ./Clients/SimpleWeb/web;
+          npm ci;
+
       - name: Version
         run: |
           cd ./Clients/SimpleWeb/web;
@@ -145,6 +150,7 @@ jobs:
         id: build-and-release
         run: |
           cd ./Clients/Desktop;
+          npm ci;
           npm version "${{ needs.version.outputs.RELVERSION }}";
           node build.js;
           bash ../build/ci-desktop-build.sh "${{ needs.version.outputs.RELVERSION }}";
