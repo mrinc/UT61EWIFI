@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const versionFile = path.join(process.cwd(), './Clients/VERSION.txt');
-const nVersion = require('./Clients/build/now-version.js');
+const nVersion = require('./now-version.js');
 
 let relVersion = nVersion(fs.readFileSync(versionFile).toString());
 console.log(`RELVERSION=${relVersion}`)
