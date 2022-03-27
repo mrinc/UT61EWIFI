@@ -158,13 +158,11 @@ jobs:
           npm ci;
 
       - name: Version
-        id: build-and-release
         run: |
           cd ./Clients/Desktop;
           npm version "${{ needs.version.outputs.RELVERSION }}";
 
       - name: Build
-        id: build-and-release
         run: |
           cd ./Clients/Desktop;
           node build.js;
