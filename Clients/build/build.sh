@@ -21,5 +21,6 @@ echo "Building desktop app";
 cd ./Clients/Desktop;
 npm ci;
 node build.js;
+npm run make;
 
 cd $CWD;

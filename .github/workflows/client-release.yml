@@ -8,7 +8,106 @@ on:
       - "feature/CIDevelopmentForMultiPlatformBuilds"
 
 jobs:
-  build-for-release:
+  version:
+    runs-on: ubuntu-latest
+    needs: build-for-release
+    outputs:
+        RELVERSION: ${{ steps.version.outputs.RELVERSION }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: Run Version
+        id: version
+        run: node ./Clients/build/now-version-cli.js
+
+
+  build-web:
+    runs-on: ubuntu-latest
+    needs: 
+      - version
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: Run Version & Build
+        id: version
+        run: |
+          cd ./Clients/SimpleWeb;
+          node version ${{ needs.version.outputs.RELVERSION }};
+          npm run build;
+          cd ./dist;
+          echo -n "${{ needs.version.outputs.RELVERSION }}" >> ./VERSION.txt;
+          cp ../../../License/* ./;
+          mkdir ../../../releases;
+          tar -czvf "../../../releases/SimpleWeb-WebUI-${{ needs.version.outputs.RELVERSION }}.tar.gz" ./*.*;
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: web-source
+          path: |
+            ./Clients/SimpleWeb/dist/**/*.*
+          retention-days: 1
+        
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: web-release
+          path: |
+            releases/*.tar.gz
+          retention-days: 1
+
+
+  build-node-red:
+    runs-on: ubuntu-latest
+    needs: 
+      - version
+      - build-web
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: Download web-source
+        uses: actions/download-artifact@v3
+        with:
+          name: web-source
+          path: ./Clients/SimpleWeb/dist/
+
+      - name: Run Version & Build
+        id: version
+        run: |
+          cd ./Clients/Node-RED;
+          node ../build/version.node-red.js "${{ needs.version.outputs.RELVERSION }}";
+          node build.js;
+          cd ./dist;
+          echo -n "${{ needs.version.outputs.RELVERSION }}" >> ./VERSION.txt;
+          cp ../../../License/* ./;
+          mkdir ../../../releases;
+          tar -czvf "../../../releases/Node-RED-${{ needs.version.outputs.RELVERSION }}.tar.gz" ./*.*;
+        
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: node-red-release
+          path: |
+            releases/*.tar.gz
+          retention-days: 1
+     
+
+  build-desktop:
+    needs: 
+      - version
+      - build-web
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -23,10 +122,6 @@ jobs:
 
     name: Build & Release on ${{ matrix.os }}.
     runs-on: ${{ matrix.os }}
-
-
-    outputs:
-      RELVERSION: ${{ steps.build-and-release.outputs.RELVERSION }}
     
     steps:
       - uses: actions/checkout@v2
@@ -35,29 +130,54 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Run Release
-        id: build-and-release
-        run: bash ./Clients/build/release.sh
+      - name: Download web-source
+        uses: actions/download-artifact@v3
+        with:
+          name: web-source
+          path: ./Clients/SimpleWeb/dist/
 
-      - run: echo ${{ steps.build-and-release.outputs.RELVERSION }}
+      - name: Run Version & Build
+        id: build-and-release
+        run: |
+          cd ./Clients/Desktop;
+          node version ${{ needs.version.outputs.RELVERSION }};
+          node build.js;
+          bash ../build/ci-desktop-build.sh "${{ needs.version.outputs.RELVERSION }}";
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: releases
+          name: desktop-release
           path: |
-            Clients/build/release/*.tar.gz
+            Clients/Desktop/out/release/*.tar.gz
           retention-days: 1
       
 
   release:
     runs-on: ubuntu-latest
-    needs: build-for-release
+    needs: 
+      - version
+      - build-web
+      - build-node-red
+      - build-desktop
     steps:
-      - name: Download release builds
+      - name: Download web-release
         uses: actions/download-artifact@v3
         with:
-          name: releases
+          name: web-release
+          path: ./releases/
+
+      - name: Download node-red-release
+        uses: actions/download-artifact@v3
+        with:
+          name: node-red-release
+          path: ./releases/
+
+      - name: Download desktop-release
+        uses: actions/download-artifact@v3
+        with:
+          name: desktop-release
+          path: ./releases/
 
       - name: Post GitHub Release
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -65,6 +185,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: false
-          title: "Clients-${{ steps.build-and-release.outputs.RELVERSION }}"
+          title: "Clients-${{ needs.version.outputs.RELVERSION }}"
           files: |
-            Clients/build/release/*.tar.gz
+            releases/*.tar.gz
