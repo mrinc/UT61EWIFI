@@ -54,9 +54,9 @@ jobs:
         run: |
           cd ./Clients/SimpleWeb/web/dist;
           echo -n "${{ needs.version.outputs.RELVERSION }}" >> ./VERSION.txt;
-          cp ../../../License/* ./;
-          mkdir ../../../releases;
-          tar -czvf "../../../releases/SimpleWeb-WebUI-${{ needs.version.outputs.RELVERSION }}.tar.gz" ./*.*;
+          cp ../../../../License/* ./;
+          mkdir ../../../../releases;
+          tar -czvf "../../../../releases/SimpleWeb-WebUI-${{ needs.version.outputs.RELVERSION }}.tar.gz" ./*.*;
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
@@ -93,17 +93,23 @@ jobs:
           name: web-source
           path: ./Clients/SimpleWeb/dist/
 
-      - name: Run Version & Build
-        id: version
+      - name: Version
         run: |
           cd ./Clients/Node-RED;
           node ../build/version.node-red.js "${{ needs.version.outputs.RELVERSION }}";
+
+      - name: Build
+        run: |
+          cd ./Clients/Node-RED;
           node build.js;
-          cd ./dist;
+
+      - name: Release
+        run: |
+          cd ./Clients/Node-RED/dist;
           echo -n "${{ needs.version.outputs.RELVERSION }}" >> ./VERSION.txt;
-          cp ../../../License/* ./;
-          mkdir ../../../releases;
-          tar -czvf "../../../releases/Node-RED-${{ needs.version.outputs.RELVERSION }}.tar.gz" ./*.*;
+          cp ../../License/* ./;
+          mkdir ../../releases;
+          tar -czvf "../../releases/Node-RED-${{ needs.version.outputs.RELVERSION }}.tar.gz" ./*.*;
         
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
@@ -146,12 +152,21 @@ jobs:
           name: web-source
           path: ./Clients/SimpleWeb/dist/
 
-      - name: Run Version & Build
-        id: build-and-release
+      - name: Deps
         run: |
           cd ./Clients/Desktop;
           npm ci;
+
+      - name: Version
+        id: build-and-release
+        run: |
+          cd ./Clients/Desktop;
           npm version "${{ needs.version.outputs.RELVERSION }}";
+
+      - name: Build
+        id: build-and-release
+        run: |
+          cd ./Clients/Desktop;
           node build.js;
           bash ../build/ci-desktop-build.sh "${{ needs.version.outputs.RELVERSION }}";
 
