@@ -1,11 +1,11 @@
 echo "Build desktop app"
 npx electron-forge make
-if [[! -d "./out" ]]; then
+if [[ ! -d "./out" ]]; then
   echo "Output not generated"
   exit 1
 fi
 ls ./out
-if [[! -d "./out/make" ]]; then
+if [[ ! -d "./out/make" ]]; then
   echo "Output make not generated"
   exit 1
 fi
@@ -35,4 +35,3 @@ if [[ -d "./out/make/squirrel.windows/" ]]; then
   echo "$1" >./out/make/squirrel.windows/x64/version.txt
   tar -czvf "$RELD/SimpleWeb-Desktop-windows-x64-$1.tar.gz" ./out/make/squirrel.windows/x64/*.*
 fi
-
