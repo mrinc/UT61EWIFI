@@ -16,30 +16,35 @@ echo "Ready release dir";
 mkdir ./out/release;
 if [[ -d "./out/make/deb/" ]]; then
   echo "Output make release deb"
+  ls ./out/make/deb;
   cp ../../License/* ./out/make/deb/x64/
   echo "$1" >./out/make/deb/x64/version.txt
   tar -czvf "./out/release/SimpleWeb-Desktop-deb-x64-$1.tar.gz" ./out/make/deb/x64/*.*
 fi
 if [[ -d "./out/make/rpm/" ]]; then
   echo "Output make release rpm"
+  ls ./out/make/rpm;
   cp ../../License/* ./out/make/rpm/x64/
   echo "$1" >./out/make/rpm/x64/version.txt
   tar -czvf "./out/release/SimpleWeb-Desktop-rpm-x64-$1.tar.gz" ./out/make/rpm/x64/*.*
 fi
 if [[ -d "./out/make/darwin/" ]]; then
   echo "Output make release darwin"
+  ls ./out/make/darwin;
   cp ../../License/* ./out/make/darwin/x64/
   echo "$1" >./out/make/darwin/x64/version.txt
   tar -czvf "./out/release/SimpleWeb-Desktop-darwin-x64-$1.tar.gz" ./out/make/darwin/x64/*.*
 fi
 if [[ -d "./out/make/zip/" ]]; then
   echo "Output make release darwin"
+  ls ./out/make/zip;
   cp ../../License/* ./out/make/zip/x64/
   echo "$1" >./out/make/zip/x64/version.txt
   tar -czvf "./out/release/SimpleWeb-Desktop-darwin-x64-$1.tar.gz" ./out/make/zip/x64/*.*
 fi
 if [[ -d "./out/make/squirrel.windows/" ]]; then
   echo "Output make release windows"
+  ls ./out/make/squirrel.windows;
   cp ../../License/* ./out/make/squirrel.windows/x64/
   echo "$1" >./out/make/squirrel.windows/x64/version.txt
   tar -czvf "./out/release/SimpleWeb-Desktop-windows-x64-$1.tar.gz" ./out/make/squirrel.windows/x64/*.*
